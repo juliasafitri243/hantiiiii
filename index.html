@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistem Data Siswa Digital</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f4f4f4;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        table, th, td {
+            border: 1px solid #aaa;
+        }
+        th, td {
+            padding: 10px;
+            text-align: center;
+        }
+        th {
+            background-color: #007BFF;
+            color: white;
+        }
+        tr:nth-child(even) {
+            background-color: #e9e9e9;
+        }
+        input, button {
+            padding: 8px;
+            margin: 5px 0;
+        }
+        .form-container {
+            background-color: #fff;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+        }
+        button {
+            cursor: pointer;
+        }
+        button.edit {
+            background-color: #ffc107;
+            border: none;
+            color: white;
+        }
+        button.delete {
+            background-color: #dc3545;
+            border: none;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Sistem Data Siswa Digital</h1>
+
+    <div class="form-container">
+        <h3>Tambah Siswa</h3>
+        <input type="text" id="nama" placeholder="Nama Siswa">
+        <input type="number" id="umur" placeholder="Umur">
+        <input type="text" id="kelas" placeholder="Kelas">
+        <button onclick="tambahSiswa()">Tambah</button>
+    </div>
+
+    <table id="tabelSiswa">
+        <thead>
+            <tr>
+                <th>No</th>
+                <th>Nama</th>
+                <th>Umur</th>
+                <th>Kelas</th>
+                <th>Aksi</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Data siswa akan muncul di sini -->
+        </tbody>
+    </table>
+
+    <script>
+        let siswaList = [];
+
+        function renderTable() {
+            const tbody = document.querySelector('#tabelSiswa tbody');
+            tbody.innerHTML = '';
+            siswaList.forEach((siswa, index) => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${index + 1}</td>
+                    <td>${siswa.nama}</td>
+                    <td>${siswa.umur}</td>
+                    <td>${siswa.kelas}</td>
+                    <td>
+                        <button class="edit" onclick="editSiswa(${index})">Edit</button>
+                        <button class="delete" onclick="hapusSiswa(${index})">Hapus</button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function tambahSiswa() {
+            const nama = document.getElementById('nama').value;
+            const umur = document.getElementById('umur').value;
+            const kelas = document.getElementById('kelas').value;
+
+            if(nama && umur && kelas){
+                siswaList.push({nama, umur, kelas});
+                renderTable();
+                document.getElementById('nama').value = '';
+                document.getElementById('umur').value = '';
+                document.getElementById('kelas').value = '';
+            } else {
+                alert('Harap isi semua data!');
+            }
+        }
+
+        function editSiswa(index) {
+            const siswa = siswaList[index];
+            const newNama = prompt("Edit Nama:", siswa.nama);
+            const newUmur = prompt("Edit Umur:", siswa.umur);
+            const newKelas = prompt("Edit Kelas:", siswa.kelas);
+            
+            if(newNama && newUmur && newKelas){
+                siswaList[index] = {nama: newNama, umur: newUmur, kelas: newKelas};
+                renderTable();
+            }
+        }
+
+        function hapusSiswa(index) {
+            if(confirm("Apakah yakin ingin menghapus data ini?")){
+                siswaList.splice(index, 1);
+                renderTable();
+            }
+        }
+
+        renderTable();
+    </script>
+
+</body>
+</html>
